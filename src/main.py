@@ -2,6 +2,7 @@ import os
 import random 
 import math 
 import pygame
+from utils.Player import Player
 from os import listdir
 from os.path import isfile, join
 
@@ -27,10 +28,11 @@ def get_background(name):
             
     return tiles, image
 
-def draw(window, background, bg_image):
+def draw(window, background, bg_image, player):
     for tile in background:
         window.blit(bg_image, tile)
-
+    
+    player.drawImage(window)
     pygame.display.update()
 
 def main(window):
@@ -38,6 +40,8 @@ def main(window):
     #set up fps and event quitting to end game upon user exit i.e. clicking 'x' button
     clock = pygame.time.Clock()
     background, bg_image = get_background("Yellow.png")
+
+    player = Player(50, 50, 25, 25)
 
     run = True
     while run:
@@ -47,7 +51,7 @@ def main(window):
             if event.type == pygame.QUIT:
                 run = False
                 break
-        draw(window, background, bg_image)
+        draw(window, background, bg_image, player)
     pygame.quit()
     quit()
 
