@@ -35,6 +35,15 @@ def draw(window, background, bg_image, player):
     player.drawImage(window)
     pygame.display.update()
 
+def moveDirection(player):
+    #set velocity to 0 to ensure player only moves on key press
+    player.xVelocity = 0
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        player.move_left(PLAYER_VELOCITY)
+    if keys[pygame.K_RIGHT]:
+        player.move_right(PLAYER_VELOCITY)
+
 def main(window):
 
     #set up fps and event quitting to end game upon user exit i.e. clicking 'x' button
@@ -51,6 +60,9 @@ def main(window):
             if event.type == pygame.QUIT:
                 run = False
                 break
+
+        player.loop(FPS)
+        moveDirection(player)
         draw(window, background, bg_image, player)
     pygame.quit()
     quit()
