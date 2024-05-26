@@ -32,7 +32,7 @@ def draw(window, background, bg_image, player):
     for tile in background:
         window.blit(bg_image, tile)
     
-    player.drawImage(window)
+    player.drawSprite(window)
     pygame.display.update()
 
 def moveDirection(player):
