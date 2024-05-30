@@ -1,6 +1,6 @@
 import os 
 import random 
-import math 
+import math
 import pygame
 from utils.Player import Player
 from os import listdir

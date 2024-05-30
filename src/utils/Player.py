@@ -37,11 +37,13 @@ def load_sprite_sheets(fol1, fol2, width, height, direction=False):
 
     return all_sprites
 
+
 class Player(pygame.sprite.Sprite):
 
     # COLOR = (255, 0, 0)
     GRAVITY = 1
-    SPRITES = load_sprite_sheets("MainCharacters", "VirtualGuy", 32, 32, True)
+    SPRITES = load_sprite_sheets("MainCharacters", "NinjaFrog", 32, 32, True)
+    ANIMATION_LAG = 4
 
     def __init__(self, x, y, width, height):
         self.rect = pygame.Rect(x, y, width, height)
@@ -69,13 +71,34 @@ class Player(pygame.sprite.Sprite):
             self.animation_count = 0
         
     def loop(self, fps):
-        # Line 73 increases y velocity by gravity for each frame in loop (i.e. each frame in screen)
+        # Line below increases y velocity by gravity for each frame in loop (i.e. each frame in screen)
         # self.yVelocity += min(1, (self.fall_count/fps) * self.GRAVITY)
 
         self.move(self.xVelocity, self.yVelocity)
         self.fall_count += 1
+        self.update_sprite()
 
+    # function to animate sprite
+    def update_sprite(self):
+        sprite_sheet = "idle"
+        if self.xVelocity != 0:
+            sprite_sheet = "run"
+
+        sprite_sheet_name = sprite_sheet + "_" + self.direction
+        sprites = self.SPRITES[sprite_sheet_name]
+        
+        # show different sprite in whatever animation is being used by dividing the animation count by the animation lag and getting the mod of that value by the lenght of sprites
+        sprite_index = (self.animation_count // self.ANIMATION_LAG) % len(sprites)
+
+        self.sprite = sprites[sprite_index]
+        self.animation_count += 1
+        self.update()
+
+    # define the rectangle we use based on the sprite selected (kinda like a div)
+    def update(self):
+        self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.sprite)
     def drawSprite(self, window):
         # pygame.draw.rect(window, self.COLOR, self.rect)
-        self.sprite = self.SPRITES["idle_" + self.direction][0]
+        # self.sprite = self.SPRITES["idle_" + self.direction][0]
         window.blit(self.sprite, (self.rect.x, self.rect.y))
