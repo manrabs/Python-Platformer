@@ -2,7 +2,7 @@ import os
 import random 
 import math
 import pygame
-from utils.Player import Player
+from utils.Object import Player, Block
 from os import listdir
 from os.path import isfile, join
 
@@ -28,9 +28,12 @@ def get_background(name):
             
     return tiles, image
 
-def draw(window, background, bg_image, player):
+def draw(window, background, bg_image, player, objects):
     for tile in background:
         window.blit(bg_image, tile)
+
+    for obj in objects:
+        obj.draw(window)
     
     player.drawSprite(window)
     pygame.display.update()
@@ -51,6 +54,10 @@ def main(window):
     background, bg_image = get_background("Yellow.png")
 
     player = Player(50, 50, 25, 25)
+    block_size = 96
+    floor = [Block(i * block_size, HEIGHT - block_size, block_size)
+             for i in range((-WIDTH // block_size),(WIDTH * 2 //block_size))]
+    blocks = [Block(0, HEIGHT-block_size, block_size)]
 
     run = True
     while run:
@@ -63,7 +70,7 @@ def main(window):
 
         player.loop(FPS)
         moveDirection(player)
-        draw(window, background, bg_image, player)
+        draw(window, background, bg_image, player, blocks)
     pygame.quit()
     quit()
 
